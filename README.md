@@ -1,7 +1,10 @@
-Run the webserver:
+```
+composer install
+```
 
-
-PHP Built in webserver:
+```
+php bin/console server:run
+```
 
 [Hold onto your butts!!](https://www.youtube.com/watch?v=-W6as8oVcuM)
 
