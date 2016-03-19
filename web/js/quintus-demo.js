@@ -1,14 +1,14 @@
 
 
 var Q = Quintus()
-    .include("Sprites, Scenes, Input, 2D, Touch, UI")
+    .include("Sprites, Scenes, Input, 2D, Anim, Touch, UI, TMX, Audio")
     .setup({ maximize: true })
     .controls().touch()
 
 Q.Sprite.extend("Player",{
     init: function(p) {
-        this._super(p, { sheet: "player", x: 410, y: 90 });
-        this.add('2d, platformerControls');
+        this._super(p, { sheet: "player", sprite: "player", x: 410, y: 90 });
+        this.add('2d, platformerControls, animation, tween');
 
         this.on("hit.sprite",function(collision) {
             if(collision.obj.isA("Tower")) {
@@ -16,6 +16,15 @@ Q.Sprite.extend("Player",{
                 this.destroy();
             }
         });
+    },
+
+    step: function(dt) {
+        if(this.p.vx > 0) {
+            this.play("walk_right");
+        } else if(this.p.vx < 0) {
+            this.play("walk_left");
+        }
+
     }
 });
 
@@ -77,5 +86,11 @@ Q.scene('endGame',function(stage) {
 Q.load("sprites.png, sprites.json, level.json, tiles.png", function() {
     Q.sheet("tiles","tiles.png", { tilew: 32, tileh: 32 });
     Q.compileSheets("sprites.png","sprites.json");
+    Q.animations("player", {
+        walk_right: { frames: [0,1,2], flip: false, loop: true },
+        walk_left: { frames:  [0,1,2], flip:"x", loop: true },
+        stand_right: { frames:[0,1,2], flip: false },
+        stand_left: { frames: [0,1,2], flip:"x" }
+    });
     Q.stageScene("level1");
 });
