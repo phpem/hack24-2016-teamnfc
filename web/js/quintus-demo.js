@@ -16,12 +16,16 @@ gamepad.bind(Gamepad.Event.UNSUPPORTED, function(device) {
 });
 
 gamepad.bind(Gamepad.Event.BUTTON_DOWN, function(e) {
-    console.log('button down');
     // e.control of gamepad e.gamepad pressed down
+    if (e.control.substring(0, 4) == "FACE") {
+        Q.inputs['up'] = true;
+    }
 });
 
 gamepad.bind(Gamepad.Event.BUTTON_UP, function(e) {
-    console.log('button up');
+    if (e.control.substring(0, 4) == "FACE") {
+        Q.inputs['up'] = false;
+    }
 });
 
 gamepad.bind(Gamepad.Event.AXIS_CHANGED, function(e) {
@@ -46,6 +50,7 @@ gamepad.bind(Gamepad.Event.AXIS_CHANGED, function(e) {
 
     /////////////////////////////
     // up
+    /*
     if (e.axis == "LEFT_STICK_Y" && e.value == -1) {
         Q.inputs['up'] = true;
     }
@@ -64,6 +69,7 @@ gamepad.bind(Gamepad.Event.AXIS_CHANGED, function(e) {
     if (e.axis =="LEFT_STICK_Y" && e.value == 0) {
         Q.inputs['down'] = false;
     }
+    */
 
 
 
