@@ -326,6 +326,7 @@
 
         channel.bind('fuck-shit-up', function(data) {
            console.log(data.message);
+           console.log(data.sentiment);
         });
 
         channel.bind('my_event', function(data) {
