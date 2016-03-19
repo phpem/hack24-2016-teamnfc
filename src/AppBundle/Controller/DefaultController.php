@@ -30,7 +30,7 @@ class DefaultController extends Controller
             $options
         );
 
-        $data['message'] = 'hello world';
+        $data['switch'] = 'false';
         $pusher->trigger('test_channel', 'my_event', $data);
 
         // replace this example code with whatever you need
