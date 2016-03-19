@@ -2,7 +2,8 @@
 
 Hello world.
 
-
-PHP Build in webserver:
+PHP Built in webserver:
 
 `php -S localhost:8000 -t public/`
+
+Hold onto your butts!!
