@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "704e3de2da59249df3ce1b8c7996dcd3",
-    "content-hash": "07c4388d96137b50c22a450d60683b09",
+    "hash": "7291cc58b21b87d4b80787b23f48d4f4",
+    "content-hash": "745d094a5dcbec57bedf357acee0820e",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -875,6 +875,61 @@
             "time": "2014-01-12 16:20:24"
         },
         {
+            "name": "laupifrpar/pusher-bundle",
+            "version": "1.2.8",
+            "target-dir": "Lopi/Bundle/PusherBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laupiFrpar/LopiPusherBundle.git",
+                "reference": "26e291624481a4fb0ed45cb9e69e29f468c96898"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laupiFrpar/LopiPusherBundle/zipball/26e291624481a4fb0ed45cb9e69e29f468c96898",
+                "reference": "26e291624481a4fb0ed45cb9e69e29f468c96898",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "pusher/pusher-php-server": ">=2.2.1"
+            },
+            "require-dev": {
+                "symfony/config": "~2.3",
+                "symfony/dependency-injection": "~2.3",
+                "symfony/http-kernel": "~2.3"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "Lopi\\Bundle\\PusherBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pierre-Louis Launay",
+                    "email": "laupi.frpar@gmail.com",
+                    "homepage": "https://github.com/laupiFrpar",
+                    "role": "developer"
+                },
+                {
+                    "name": "Community contributors",
+                    "homepage": "https://github.com/laupifrpar/lopipusherbundle/contributors"
+                }
+            ],
+            "description": "A Pusher bundle for Symfony2",
+            "homepage": "https://github.com/laupifrpar/lopipusherbundle",
+            "keywords": [
+                "nosql",
+                "pusher",
+                "symfony"
+            ],
+            "time": "2016-03-09 18:51:35"
+        },
+        {
             "name": "monolog/monolog",
             "version": "1.17.2",
             "source": {
@@ -1036,6 +1091,50 @@
                 "psr-3"
             ],
             "time": "2012-12-21 11:40:51"
+        },
+        {
+            "name": "pusher/pusher-php-server",
+            "version": "v2.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pusher/pusher-http-php.git",
+                "reference": "c03f5702d774d2c68785d4b61cd4701ed10759c5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pusher/pusher-http-php/zipball/c03f5702d774d2c68785d4b61cd4701ed10759c5",
+                "reference": "c03f5702d774d2c68785d4b61cd4701ed10759c5",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "lib/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Library for interacting with the Pusher REST API",
+            "homepage": "https://github.com/pusher/pusher-php-server",
+            "keywords": [
+                "events",
+                "php-pusher-server",
+                "publish",
+                "pusher",
+                "realtime",
+                "rest",
+                "trigger"
+            ],
+            "time": "2016-02-22 15:43:51"
         },
         {
             "name": "sensio/distribution-bundle",
