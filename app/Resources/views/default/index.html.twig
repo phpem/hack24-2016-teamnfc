@@ -10,14 +10,14 @@
             }
         };
 
-        var pusher = new Pusher('b6ac1ee705e196be3e27', {
+        var pusher = new Pusher('{{ pusher_app_key }}', {
             cluster: 'eu',
             encrypted: true
         });
 
         var channel = pusher.subscribe('test_channel');
         channel.bind('my_event', function(data) {
-            alert(data.message);
+            console.log(data.message);
         });
     </script>
 
