@@ -52,7 +52,6 @@
             /////////////////////////////
             // up
             if (e.axis == "LEFT_STICK_Y" && e.value == -1) {
-                console.log('up');
                 Q.inputs['up'] = true;
             }
 
@@ -64,7 +63,6 @@
             /////////////////////////////
             // down
             if (e.axis == "LEFT_STICK_Y" && e.value == 1) {
-                console.log('down');
                 Q.inputs['down'] = true;
             }
 
@@ -83,6 +81,7 @@
         });
 
         if (!gamepad.init()) {
+            alert('your browser are teh suck');
             // Your browser does not support gamepads, get the latest Google Chrome or Firefox
         }
 
@@ -90,78 +89,12 @@
 //            console.log(event.keyCode);
         };
 
-        var haveEvents = 'ongamepadconnected' in window;
         var controllers = {};
-
-        function connecthandler(e) {
-            //addgamepad(e.gamepad);
-        }
-
-        function addgamepad(gamepad) {
-            controllers[gamepad.index] = gamepad;
-
-            var d = document.createElement("div");
-            d.setAttribute("id", "controller" + gamepad.index);
-
-            var t = document.createElement("h1");
-            t.appendChild(document.createTextNode("gamepad: " + gamepad.id));
-            d.appendChild(t);
-
-            var b = document.createElement("div");
-            b.className = "buttons";
-            for (var i = 0; i < gamepad.buttons.length; i++) {
-                var e = document.createElement("span");
-                e.className = "button";
-                //e.id = "b" + i;
-                e.innerHTML = i;
-                b.appendChild(e);
-            }
-
-            d.appendChild(b);
-
-            var a = document.createElement("div");
-            a.className = "axes";
-
-            for (var i = 0; i < gamepad.axes.length; i++) {
-                var p = document.createElement("progress");
-                p.className = "axis";
-                //p.id = "a" + i;
-                p.setAttribute("max", "2");
-                p.setAttribute("value", "1");
-                p.innerHTML = i;
-                a.appendChild(p);
-            }
-
-            d.appendChild(a);
-
-            // See https://github.com/luser/gamepadtest/blob/master/index.html
-            var start = document.getElementById("start");
-            if (start) {
-                start.style.display = "none";
-            }
-
-            document.body.appendChild(d);
-            requestAnimationFrame(updateStatus);
-        }
-
-        function disconnecthandler(e) {
-            removegamepad(e.gamepad);
-        }
-
-        function removegamepad(gamepad) {
-            var d = document.getElementById("controller" + gamepad.index);
-            document.body.removeChild(d);
-            delete controllers[gamepad.index];
-        }
 
         function updateStatus() {
             requestAnimationFrame(updateStatus);
         }
 
-
-
-        window.addEventListener("gamepadconnected", connecthandler);
-        window.addEventListener("gamepaddisconnected", disconnecthandler);
 
 
 
