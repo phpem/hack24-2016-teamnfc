@@ -23,8 +23,9 @@ Q.Sprite.extend("Player",{
             this.play("walk_right");
         } else if(this.p.vx < 0) {
             this.play("walk_left");
+        } else {
+            this.play("stand_" + this.p.direction);
         }
-
     }
 });
 
@@ -83,14 +84,15 @@ Q.scene('endGame',function(stage) {
     box.fit(20);
 });
 
-Q.load("sprites.png, sprites.json, level.json, tiles.png", function() {
+Q.load("player.png, player.json, sprites.png, sprites.json, level.json, tiles.png", function() {
     Q.sheet("tiles","tiles.png", { tilew: 32, tileh: 32 });
     Q.compileSheets("sprites.png","sprites.json");
+    Q.compileSheets("player.png", "player.json");
     Q.animations("player", {
-        walk_right: { frames: [0,1,2], flip: false, loop: true },
-        walk_left: { frames:  [0,1,2], flip:"x", loop: true },
-        stand_right: { frames:[0,1,2], flip: false },
-        stand_left: { frames: [0,1,2], flip:"x" }
+        walk_right: { frames: [0,1,2], flip: false, rate:1/3, loop: true },
+        walk_left: { frames:  [0,1,2], flip:"x", rate:1/3, loop: true },
+        stand_right: { frames:[3,4,5], flip: false, rate:1/3, loop:true },
+        stand_left: { frames: [3,4,5], flip:"x", rate:1/3, loop:true }
     });
     Q.stageScene("level1");
 });

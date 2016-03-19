@@ -1,15 +1,7 @@
 {
-  "player": {
-    "sx": 0,
-    "sy": 9,
-    "cols": 3,
-    "tilew": 26,
-    "tileh": 21,
-    "frames": 3
-  },
   "enemy": {
     "sx": 0,
-    "sy": 31,
+    "sy": 0,
     "cols": 1,
     "tilew": 30,
     "tileh": 24,
@@ -17,7 +9,7 @@
   },
   "tower": {
     "sx": 0,
-    "sy": 56,
+    "sy": 25,
     "cols": 1,
     "tilew": 30,
     "tileh": 30,
