@@ -113,31 +113,36 @@
                     a.setAttribute("value", controller.axes[i] + 1);
 
                     var value = controller.axes[i].toFixed(4);
-                    var press = $.Event("keydown");
-                    press.ctrlKey = false;
 
-                    if(i == 0 && value < -0.5) { // left
+                    if (i == 0 && value < -0.5) { // left
                         console.log('left');
-                        press.which = 37;
-                        jQuery.event.trigger(press);
-                    }
-                    if(i == 0 && value > 0.5) { // right
-                        console.log('right');
-                        press.which = 39;
-                        jQuery.event.trigger(press);
-                    }
-                    if(i == 1 && value < -0.5) { // up
-                        console.log('up');
-                        press.which = 38;
-                        jQuery.event.trigger(press);
-                    }
-                    if(i == 1 && value > 0.5) { // down
-                        console.log('down');
-                        press.which = 40;
-                        jQuery.event.trigger(press);
+                        Q.inputs['left'] = true;
+                        break;
                     }
 
-                    //console.log()
+                    if (i == 0 && value > 0.5) { // right
+                        console.log('right');
+                        Q.inputs['right'] = true;
+                        break;
+                    }
+
+                    if (i == 1 && value < -0.5) { // up
+                        console.log('up');
+                        Q.inputs['up'] = true;
+                        break;
+                    }
+
+                    if (i == 1 && value > 0.5) { // down
+                        console.log('down');
+                        Q.inputs['down'] = true;
+                        break;
+                    }
+
+                    // This will fuck up your enjoyment of the keyboard controls.
+                    Q.inputs['left'] = false;
+                    Q.inputs['right'] = false;
+                    Q.inputs['up'] = false;
+                    Q.inputs['down'] = false;
                 }
             }
 
