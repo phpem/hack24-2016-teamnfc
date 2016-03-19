@@ -8,11 +8,6 @@ imports:
 parameters:
     locale: en
 
-lopi_pusher:
-    app_id: "%pusher_app_id%"
-    key: "%pusher_app_key%"
-    secret: "%pusher_app_secret"
-
 framework:
     #esi:             ~
     #translator:      { fallbacks: ["%locale%"] }
@@ -36,6 +31,12 @@ framework:
     fragments:       ~
     http_method_override: true
     assets: ~
+
+
+lopi_pusher:
+    app_id: "%pusher_app_id%"
+    key: "%pusher_app_key%"
+    secret: "%pusher_app_secret%"
 
 # Twig Configuration
 twig:
