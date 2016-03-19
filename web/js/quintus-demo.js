@@ -95,6 +95,9 @@ Q.Sprite.extend("Player",{
             if(collision.obj.isA("Tower")) {
                 Q.stageScene("endGame",1, { label: "You Won!" });
                 this.destroy();
+            } else if(collision.obj.isA("Watermelon")) {
+                collision.obj.destroy();
+                console.log("POINT FOR YOU");
             }
         });
     },
@@ -137,6 +140,26 @@ Q.Sprite.extend("Enemy",{
     }
 });
 
+Q.Sprite.extend("Watermelon",{
+    init: function(p) {
+        this._super(p, { sheet: 'watermelon' });
+    }
+});
+
+Q.Sprite.extend("Evilmelon",{
+    init: function(p) {
+        this._super(p, { sheet: 'evilmelon', vx: 100 });
+        this.add('2d, aiBounce');
+
+        this.on("bump.left,bump.right,bump.bottom,bump.top",function(collision) {
+            if(collision.obj.isA("Player")) {
+                console.log("LOSE POINTS!!");
+                this.destroy();
+            }
+        });
+    }
+});
+
 Q.scene("level1",function(stage) {
     stage.collisionLayer(new Q.TileLayer({ dataAsset: 'level.json', sheet: 'tiles' }));
     var player = stage.insert(new Q.Player());
@@ -145,6 +168,10 @@ Q.scene("level1",function(stage) {
 
     stage.insert(new Q.Enemy({ x: 700, y: 0 }));
     stage.insert(new Q.Enemy({ x: 800, y: 0 }));
+    stage.insert(new Q.Evilmelon({ x: 900, y: 0 }));
+    stage.insert(new Q.Evilmelon({ x: 300, y: 0 }));
+    stage.insert(new Q.Watermelon({ x: 500, y: 0 }));
+    stage.insert(new Q.Watermelon({ x: 400, y: 0 }));
 
     stage.insert(new Q.Tower({ x: 180, y: 50 }));
 });
@@ -165,7 +192,7 @@ Q.scene('endGame',function(stage) {
     box.fit(20);
 });
 
-Q.load("player.png, player.json, sprites.png, sprites.json, level.json, tiles.png", function() {
+Q.load("player.png, player.json, sprites.png, sprites.json, level.json, tiles.png, watermelon.png, watermelon.json", function() {
     Q.sheet("tiles","tiles.png", { tilew: 32, tileh: 32 });
     Q.compileSheets("sprites.png","sprites.json");
     Q.compileSheets("player.png", "player.json");
@@ -175,6 +202,7 @@ Q.load("player.png, player.json, sprites.png, sprites.json, level.json, tiles.pn
         stand_right: { frames:[3,4,5], flip: false, rate:1/3, loop:true },
         stand_left: { frames: [3,4,5], flip:"x", rate:1/3, loop:true }
     });
+    Q.compileSheets("watermelon.png", "watermelon.json");
     Q.stageScene("level1");
 });
 

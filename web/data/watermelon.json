@@ -1,0 +1,18 @@
+{
+  "watermelon": {
+    "sx": 0,
+    "sy": 0,
+    "cols": 1,
+    "tilew": 13,
+    "tileh": 13,
+    "frames": 1
+  },
+  "evilmelon": {
+    "sx": 0,
+    "sy": 14,
+    "cols": 1,
+    "tilew": 13,
+    "tileh": 13,
+    "frames": 1
+  }
+}
