@@ -19,19 +19,10 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $options = array(
-            'cluster' => 'eu',
-            'encrypted' => true
-        );
-        $pusher = new Pusher(
-            'b6ac1ee705e196be3e27',
-            'a5d7f09f968d03f87b51',
-            '189121',
-            $options
-        );
+        $pusher = $this->get('messenger');
 
-        $data['switch'] = 'false';
-        $pusher->trigger('test_channel', 'my_event', $data);
+        //$data['switch'] = 'false';
+        //$pusher->trigger('test_channel', 'my_event', $data);
 
         // replace this example code with whatever you need
         return $this->render('default/index.html.twig', [
