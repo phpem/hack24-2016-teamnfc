@@ -23,6 +23,7 @@
   ],
   "dependencies": {
     "quintus": "master",
-    "jquery": "^2.2.2"
+    "jquery": "^2.2.2",
+    "pusher": "^3.0.0"
   }
 }

@@ -16,4 +16,5 @@
 /web/bundles/
 /commit_images
 .idea/*
-
+/bower_components/
+/node_modules/
