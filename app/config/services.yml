@@ -4,6 +4,10 @@ parameters:
 #    parameter_name: value
 
 services:
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    pusher:
+        class: Pusher
+        arguments: [ '%pusher_app_key%', '%pusher_app_secret%', '%pusher_app_id%', [ cluster: 'eu', encrypted: true ] ]
+
+    messenger:
+        class: AppBundle\Messaging\PusherMessenger
+        arguments: [ '@pusher' ]
