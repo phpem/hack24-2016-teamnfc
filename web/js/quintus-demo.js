@@ -2,165 +2,84 @@ document.onkeydown = function(event) {
 //            console.log(event.keyCode);
 };
 
-var haveEvents = 'ongamepadconnected' in window;
-var controllers = {};
+var gamepad = new Gamepad();
+gamepad.bind(Gamepad.Event.CONNECTED, function(device) {
+    // a new gamepad connected
+});
 
-function connecthandler(e) {
-    addgamepad(e.gamepad);
-}
+gamepad.bind(Gamepad.Event.DISCONNECTED, function(device) {
+    // gamepad disconnected
+});
 
-function addgamepad(gamepad) {
-    controllers[gamepad.index] = gamepad;
+gamepad.bind(Gamepad.Event.UNSUPPORTED, function(device) {
+    // an unsupported gamepad connected (add new mapping)
+});
 
-    var d = document.createElement("div");
-    d.setAttribute("id", "controller" + gamepad.index);
+gamepad.bind(Gamepad.Event.BUTTON_DOWN, function(e) {
+    console.log('button down');
+    // e.control of gamepad e.gamepad pressed down
+});
 
-    var t = document.createElement("h1");
-    t.appendChild(document.createTextNode("gamepad: " + gamepad.id));
-    d.appendChild(t);
+gamepad.bind(Gamepad.Event.BUTTON_UP, function(e) {
+    console.log('button up');
+});
 
-    var b = document.createElement("div");
-    b.className = "buttons";
-    for (var i = 0; i < gamepad.buttons.length; i++) {
-        var e = document.createElement("span");
-        e.className = "button";
-        //e.id = "b" + i;
-        e.innerHTML = i;
-        b.appendChild(e);
+gamepad.bind(Gamepad.Event.AXIS_CHANGED, function(e) {
+    /////////////////////////////
+    /// left
+    if (e.axis == "LEFT_STICK_X" && e.value == -1) {
+        Q.inputs['left'] = true;
     }
 
-    d.appendChild(b);
-
-    var a = document.createElement("div");
-    a.className = "axes";
-
-    for (var i = 0; i < gamepad.axes.length; i++) {
-        var p = document.createElement("progress");
-        p.className = "axis";
-        //p.id = "a" + i;
-        p.setAttribute("max", "2");
-        p.setAttribute("value", "1");
-        p.innerHTML = i;
-        a.appendChild(p);
+    if (e.axis =="LEFT_STICK_X" && e.value == 0) {
+        Q.inputs['left'] = false;
+    }
+    /////////////////////////////
+    // right
+    if (e.axis == "LEFT_STICK_X" && e.value == 1) {
+        Q.inputs['right'] = true;
     }
 
-    d.appendChild(a);
-
-    // See https://github.com/luser/gamepadtest/blob/master/index.html
-    var start = document.getElementById("start");
-    if (start) {
-        start.style.display = "none";
+    if (e.axis =="LEFT_STICK_X" && e.value == 0) {
+        Q.inputs['right'] = false;
     }
 
-    document.body.appendChild(d);
-    requestAnimationFrame(updateStatus);
-}
-
-function disconnecthandler(e) {
-    removegamepad(e.gamepad);
-}
-
-function removegamepad(gamepad) {
-    var d = document.getElementById("controller" + gamepad.index);
-    document.body.removeChild(d);
-    delete controllers[gamepad.index];
-}
-
-function updateStatus() {
-    if (!haveEvents) {
-        scangamepads();
+    /////////////////////////////
+    // up
+    if (e.axis == "LEFT_STICK_Y" && e.value == -1) {
+        Q.inputs['up'] = true;
     }
 
-    var i = 0;
-    var j;
-
-    for (j in controllers) {
-        var controller = controllers[j];
-        var d = document.getElementById("controller" + j);
-        var buttons = d.getElementsByClassName("button");
-
-        for (i = 0; i < controller.buttons.length; i++) {
-            var b = buttons[i];
-            var val = controller.buttons[i];
-            var pressed = val == 1.0;
-            if (typeof(val) == "object") {
-                pressed = val.pressed;
-                val = val.value;
-            }
-
-            var pct = Math.round(val * 100) + "%";
-            b.style.backgroundSize = pct + " " + pct;
-
-            if (pressed) {
-                b.className = "button pressed";
-            } else {
-                b.className = "button";
-            }
-        }
-
-        var axes = d.getElementsByClassName("axis");
-        for (i = 0; i < controller.axes.length; i++) {
-            var a = axes[i];
-            a.innerHTML = i + ": " + controller.axes[i].toFixed(4);
-            a.setAttribute("value", controller.axes[i] + 1);
-
-            var value = controller.axes[i].toFixed(4);
-
-            if (i == 0 && value < -0.5) { // left
-                console.log('left');
-                Q.inputs['left'] = true;
-                break;
-            }
-
-            if (i == 0 && value > 0.5) { // right
-                console.log('right');
-                Q.inputs['right'] = true;
-                break;
-            }
-
-            if (i == 1 && value < -0.5) { // up
-                console.log('up');
-                Q.inputs['up'] = true;
-                break;
-            }
-
-            if (i == 1 && value > 0.5) { // down
-                console.log('down');
-                Q.inputs['down'] = true;
-                break;
-            }
-
-            // This will fuck up your enjoyment of the keyboard controls.
-            Q.inputs['left'] = false;
-            Q.inputs['right'] = false;
-            Q.inputs['up'] = false;
-            Q.inputs['down'] = false;
-        }
+    if (e.axis =="LEFT_STICK_Y" && e.value == 0) {
+        Q.inputs['up'] = false;
     }
 
-    requestAnimationFrame(updateStatus);
-}
 
-function scangamepads() {
-    var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
-    for (var i = 0; i < gamepads.length; i++) {
-        if (gamepads[i]) {
-            if (gamepads[i].index in controllers) {
-                controllers[gamepads[i].index] = gamepads[i];
-            } else {
-                addgamepad(gamepads[i]);
-            }
-        }
+    /////////////////////////////
+    // down
+    if (e.axis == "LEFT_STICK_Y" && e.value == 1) {
+        Q.inputs['down'] = true;
     }
+
+    if (e.axis =="LEFT_STICK_Y" && e.value == 0) {
+        Q.inputs['down'] = false;
+    }
+
+
+
+    // e.axis changed to value e.value for gamepad e.gamepad
+});
+
+gamepad.bind(Gamepad.Event.TICK, function(gamepads) {
+    //console.log('tick');
+    // gamepads were updated (around 60 times a second)
+});
+
+if (!gamepad.init()) {
+    alert('your browser are teh suck');
+    // Your browser does not support gamepads, get the latest Google Chrome or Firefox
 }
 
-
-window.addEventListener("gamepadconnected", connecthandler);
-window.addEventListener("gamepaddisconnected", disconnecthandler);
-
-if (!haveEvents) {
-    setInterval(scangamepads, 500);
-}
 
 var Q = Quintus()
     .include("Sprites, Scenes, Input, 2D, Touch, UI")
