@@ -2,19 +2,33 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Messaging\PusherMessenger;
+use Pusher;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
 {
+
     /**
      * @Route("/", name="homepage")
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
     {
-        /** @var \Pusher $pusher */
-        $pusher = $this->container->get('lopi_pusher.pusher');
+        $options = array(
+            'cluster' => 'eu',
+            'encrypted' => true
+        );
+        $pusher = new Pusher(
+            'b6ac1ee705e196be3e27',
+            'a5d7f09f968d03f87b51',
+            '189121',
+            $options
+        );
 
         $data['message'] = 'hello world';
         $pusher->trigger('test_channel', 'my_event', $data);
