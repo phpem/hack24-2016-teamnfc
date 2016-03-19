@@ -6,7 +6,10 @@ var uglify = require('gulp-uglifyjs');
 
 
 var paths = {
-    scripts: ['bower_components/jquery/dist/jquery.min.js'],
+    scripts: [
+        'bower_components/jquery/dist/jquery.min.js',
+        'bower_components/pusher/dist/pusher.min.js'
+    ],
     dist: 'web/js/'
 };
 
