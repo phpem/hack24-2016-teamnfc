@@ -2,16 +2,17 @@
 
 var gulp = require('gulp');
 
-var paths = {
-    scripts: [
-        'bower_components/quintus/lib/*'
-    ],
-    dist: 'web/js/'
-};
+var uglify = require('gulp-uglifyjs');
 
-gulp.task('move', function(){
-    gulp.src(paths.scripts)
-        .pipe(gulp.dest(paths.dist));
+gulp.task('uglify', function() {
+    gulp.src(['bower_components/quintus/lib/*'])
+        .pipe(uglify('nfc.js', {
+            mangle: false,
+            output: {
+                beautify: true
+            }
+        }))
+        .pipe(gulp.dest('web/js'))
 });
 
-gulp.task('default',['move']);
+gulp.task('default',['uglify']);
