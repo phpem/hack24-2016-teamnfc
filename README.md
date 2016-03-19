@@ -1,9 +1,4 @@
-# Hack24 2016 - Team NFC
+newproject
+==========
 
-Hello world.
-
-PHP Built in webserver:
-
-`php -S localhost:8000 -t public/`
-
-Hold onto your butts!!
+A Symfony project created on March 19, 2016, 12:15 pm.
