@@ -37,6 +37,8 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    globals:
+        pusher_app_key: "%pusher_app_key%"
 
 # Doctrine Configuration
 doctrine:
