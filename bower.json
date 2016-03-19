@@ -21,6 +21,7 @@
     "tests"
   ],
   "dependencies": {
-    "quintus": "^0.1.5"
+    "quintus": "master",
+    "jquery": "^2.2.2"
   }
 }
