@@ -22,3 +22,5 @@ parameters:
     pusher_app_id: ThisIsAnAppIdChangeIt
     pusher_app_key: ThisIsAnAppKeyChangeIt
     pusher_app_secret: ThisIsAnAppSecretChangeIt
+
+    callback_esendex_id: ThisNeedsToBeLongAndSecret
