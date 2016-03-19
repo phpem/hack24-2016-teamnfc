@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7291cc58b21b87d4b80787b23f48d4f4",
-    "content-hash": "745d094a5dcbec57bedf357acee0820e",
+    "hash": "71defea8ac2477d8a33fcde2e48c3ed0",
+    "content-hash": "6259c06231a0b8be0c806b03d5305d43",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -873,6 +873,47 @@
                 "sql"
             ],
             "time": "2014-01-12 16:20:24"
+        },
+        {
+            "name": "jwhennessey/phpinsight",
+            "version": "v2.0.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/JWHennessey/phpInsight.git",
+                "reference": "b89e7a7f418ebd88ae330b889be4dd1d47d4ceaa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/JWHennessey/phpInsight/zipball/b89e7a7f418ebd88ae330b889be4dd1d47d4ceaa",
+                "reference": "b89e7a7f418ebd88ae330b889be4dd1d47d4ceaa",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PHPInsight": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPLv3 or later"
+            ],
+            "authors": [
+                {
+                    "name": "James Hennessey"
+                }
+            ],
+            "description": "Sentiment analysis tool for PHP",
+            "homepage": "https://github.com/JWHennessey/phpInsight",
+            "keywords": [
+                "insight",
+                "phpinsight",
+                "sentiment"
+            ],
+            "time": "2015-06-20 03:38:20"
         },
         {
             "name": "laupifrpar/pusher-bundle",

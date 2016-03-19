@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use PHPInsight\Sentiment;
 use Pusher;
 use SimpleXMLElement;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -38,8 +39,12 @@ class CallbackController extends Controller
             $options
         );
 
-        $data['message'] = 'hello world';
-        $pusher->trigger('test_channel', 'fuck-shit-up', ['message' => $parsedData['MessageText']]);
+
+        $messageText = $parsedData['MessageText'];
+        $sentiment = new Sentiment();
+        $class = $sentiment->categorise($messageText);
+
+        $pusher->trigger('test_channel', 'fuck-shit-up', ['sentiment' => $class, 'message'  =>  $messageText]);
 
         return $this->render(':callback:esendex.html.twig');
     }
