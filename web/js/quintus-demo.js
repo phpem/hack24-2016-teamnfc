@@ -12,6 +12,16 @@ function getPlayerLocation() {
     return loc;
 }
 
+function doAPugBomb() {
+    stage = Q.stage(0);
+    for(i=300;i<1700;i++)
+    {
+        if(i % 10 == 0) {
+            stage.insert(new Q.FakePug({x: i, y: 0}));
+        }
+    }
+}
+
 var reversed = false;
 
 var gamepad = new Gamepad();
@@ -28,7 +38,9 @@ gamepad.bind(Gamepad.Event.UNSUPPORTED, function(device) {
 });
 
 gamepad.bind(Gamepad.Event.BUTTON_DOWN, function(e) {
-    console.log('button down');
+    if (e.control == "LEFT_TOP_SHOULDER") {
+        doAPugBomb();
+    }
     // e.control of gamepad e.gamepad pressed down
     if (e.control.substring(0, 4) == "FACE") {
         Q.inputs['up'] = true;
@@ -370,12 +382,7 @@ Q.scene("level1",function(stage) {
     });
 
     channel.bind('pug-bomb', function (data) {
-        for(i=300;i<1700;i++)
-        {
-            if(i % 10 == 0) {
-                stage.insert(new Q.FakePug({x: i, y: 0}));
-            }
-        }
+        doAPugBomb();
     })
 
 
