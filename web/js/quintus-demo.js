@@ -16,12 +16,17 @@ gamepad.bind(Gamepad.Event.UNSUPPORTED, function(device) {
 });
 
 gamepad.bind(Gamepad.Event.BUTTON_DOWN, function(e) {
-    //console.log('button down');
+    console.log('button down');
     // e.control of gamepad e.gamepad pressed down
+    if (e.control.substring(0, 4) == "FACE") {
+        Q.inputs['up'] = true;
+    }
 });
 
 gamepad.bind(Gamepad.Event.BUTTON_UP, function(e) {
-    //console.log('button up');
+    if (e.control.substring(0, 4) == "FACE") {
+        Q.inputs['up'] = false;
+    }
 });
 
 gamepad.bind(Gamepad.Event.AXIS_CHANGED, function(e) {
@@ -46,6 +51,7 @@ gamepad.bind(Gamepad.Event.AXIS_CHANGED, function(e) {
 
     /////////////////////////////
     // up
+    /*
     if (e.axis == "LEFT_STICK_Y" && e.value == -1) {
         Q.inputs['up'] = true;
     }
@@ -64,6 +70,7 @@ gamepad.bind(Gamepad.Event.AXIS_CHANGED, function(e) {
     if (e.axis =="LEFT_STICK_Y" && e.value == 0) {
         Q.inputs['down'] = false;
     }
+    */
 
 
 
@@ -168,18 +175,18 @@ Q.Sprite.extend("Player",{
             this.resetLevel();
         }
     },
-    
+
     watermelonHit: function (data) {
         this.p.score += data.value;
         Q.stageScene('hud', 3, this.p);
 
     },
-    
+
     evilmelonHit: function () {
         console.log("Hit evil");
     }
-    
-    
+
+
 });
 
 Q.Sprite.extend("Tower", {
@@ -206,7 +213,7 @@ Q.Sprite.extend("Enemy",{
             col.obj.trigger('enemy.hit', {"damage":this.p.damage,"col":col});
         }
     },
-    
+
     die: function (col) {
         if(col.obj.isA("Player")) {
             this.p.vx=this.p.vy=0;
