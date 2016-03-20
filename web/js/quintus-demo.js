@@ -2,6 +2,18 @@ document.onkeydown = function(event) {
 //            console.log(event.keyCode);
 };
 
+function setPlayerLocation(obj) {
+    Q("Player").items[0].p = obj;
+}
+
+function getPlayerLocation() {
+    var loc = Q("Player").items[0].p;
+
+    return JSON.stringify(loc);
+}
+
+var reversed = false;
+
 var gamepad = new Gamepad();
 gamepad.bind(Gamepad.Event.CONNECTED, function(device) {
     // a new gamepad connected
@@ -32,23 +44,45 @@ gamepad.bind(Gamepad.Event.BUTTON_UP, function(e) {
 gamepad.bind(Gamepad.Event.AXIS_CHANGED, function(e) {
     /////////////////////////////
     /// left
-    if (e.axis == "LEFT_STICK_X" && e.value == -1) {
-        Q.inputs['left'] = true;
-    }
 
-    if (e.axis =="LEFT_STICK_X" && e.value == 0) {
-        Q.inputs['left'] = false;
-    }
-    /////////////////////////////
-    // right
-    if (e.axis == "LEFT_STICK_X" && e.value == 1) {
-        Q.inputs['right'] = true;
-    }
+    if( ! reversed) {
 
-    if (e.axis =="LEFT_STICK_X" && e.value == 0) {
-        Q.inputs['right'] = false;
-    }
+        if (e.axis == "LEFT_STICK_X" && e.value == -1) {
+            Q.inputs['left'] = true;
+        }
 
+        if (e.axis =="LEFT_STICK_X" && e.value == 0) {
+            Q.inputs['left'] = false;
+        }
+        /////////////////////////////
+        // right
+        if (e.axis == "LEFT_STICK_X" && e.value == 1) {
+            Q.inputs['right'] = true;
+        }
+
+        if (e.axis =="LEFT_STICK_X" && e.value == 0) {
+            Q.inputs['right'] = false;
+        }
+    }
+    else
+    {
+        if (e.axis == "LEFT_STICK_X" && e.value == -1) {
+            Q.inputs['right'] = true;
+        }
+
+        if (e.axis =="LEFT_STICK_X" && e.value == 0) {
+            Q.inputs['right'] = false;
+        }
+        /////////////////////////////
+        // right
+        if (e.axis == "LEFT_STICK_X" && e.value == 1) {
+            Q.inputs['left'] = true;
+        }
+
+        if (e.axis =="LEFT_STICK_X" && e.value == 0) {
+            Q.inputs['left'] = false;
+        }
+    }
     /////////////////////////////
     // up
     /*
@@ -380,6 +414,24 @@ channel.bind('fuck-shit-up', function(data) {
     // console.log(data.message);
     // console.log(data.sentiment);
     // console.log(Q.stage);
+});
+
+
+channel.bind('reverse-it', function(data) {
+    reversed = !reversed;
+    console.log('reversed: ' + reversed);
+});
+var position = {};
+var positionCaptured = false;
+channel.bind('handle-position', function(data) {
+    if( ! positionCaptured) {
+        position = getPlayerLocation();
+    }
+    else
+    {
+        setPlayerLocation(position);
+    }
+    positionCaptured = !positionCaptured;
 });
 
 channel.bind('my_event', function(data) {

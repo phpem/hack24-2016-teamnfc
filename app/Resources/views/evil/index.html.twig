@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <style>
+        #evil-wrapper {
+            margin: 0 auto;
+            width: auto;
+            text-align: center;
+            margin-top: 150px;
+        }
+
+        h1 {
+            color: red;
+            font-family: sans-serif;
+        }
+
+        img {
+            display: inline-block;
+            margin-bottom: 30px;
+        }
+
+        button {
+            border: 0;
+            margin: 10px;
+            padding: 40px;
+            background-color: white;
+            border: 2px solid red;
+            color: red;
+            font-size: 30px;
+            display: inline-block;
+        }
+    </style>
+{% endblock %}
+{% block javascripts %}
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/pusher.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#reverse').click(function () {
+                var url = "{{ path('evil_reverse') }}";
+                $.ajax({
+                    url: url,
+                    context: document.body
+                }).done(function() {
+                    console.log('reversed, how delightfully evil');
+                });
+            });
+            $('#random').click(function () {
+                var url = "{{ path('evil_random') }}";
+                $.ajax({
+                    url: url,
+                    context: document.body
+                }).done(function() {
+                    console.log('randomised, how delightfully evil');
+                });
+            });
+        });
+    </script>
+{% endblock %}
+{% block body %}
+    <div id="evil-wrapper">
+        <h1>Evil Toolbox</h1>
+        <img src="https://upload.wikimedia.org/wikipedia/en/1/16/Drevil_million_dollars.jpg" alt=""/><br/>
+        <button id="reverse">REVERSE</button>
+        <button id="random">POSITION</button>
+    </div>
+{% endblock %}
