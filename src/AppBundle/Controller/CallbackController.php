@@ -15,6 +15,21 @@ class CallbackController extends Controller
 {
 
     /**
+     * @Route("/callback/pug-bomb", name="callback_pugbomb")
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function pugBomb(Request $request)
+    {
+        $pusher = $this->getPusher();
+
+        $pusher->trigger('test_channel', 'pug-bomb', ['message' => 'ALL THE PUGS']);
+
+        return $this->render(':callback:esendex.html.twig');
+    }
+
+    /**
      * @Route("/callback/esendex/{id}", name="callback_esendex")
      * @param Request $request
      *
@@ -34,13 +49,7 @@ class CallbackController extends Controller
         $sentiment = new Sentiment();
         $class = $sentiment->categorise($messageText);
 
-        if($messageText != 'pug bomb') {
-            $pusher->trigger('test_channel', 'fuck-shit-up', ['sentiment' => $class, 'message'  =>  $messageText]);
-        }
-        else
-        {
-            $pusher->trigger('test_channel', 'pug-bomb', ['message'  =>  $messageText]);
-        }
+        $pusher->trigger('test_channel', 'fuck-shit-up', ['sentiment' => $class, 'message' => $messageText]);
 
         return $this->render(':callback:esendex.html.twig');
     }
@@ -55,7 +64,11 @@ class CallbackController extends Controller
     {
         $pusher = $this->getPusher();
 
-        $pusher->trigger('test_channel', 'fuck-shit-up', ['sentiment' => 'neg', 'message'  =>  'SHIT GOT FUCKED UP FOR REAL YO']);
+        $pusher->trigger(
+            'test_channel',
+            'fuck-shit-up',
+            ['sentiment' => 'neg', 'message' => 'SHIT GOT FUCKED UP FOR REAL YO']
+        );
 
         return $this->render(':callback:esendex.html.twig');
     }
@@ -84,7 +97,7 @@ class CallbackController extends Controller
     protected function getPusher()
     {
         $options = array(
-            'cluster'   => 'eu',
+            'cluster' => 'eu',
             'encrypted' => true
         );
         $pusher = new Pusher(
