@@ -7,22 +7,16 @@
     <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
     <script>
 
-        function setPlayerLocation(coords) {
-            Q("Player").items[0].p.x = coords.x;
-            Q("Player").items[0].p.y = coords.y;
-            Q("Player").items[0].p.z = coords.z;
+        function setPlayerLocation(obj) {
+            Q("Player").items[0].p = obj;
         }
 
         function getPlayerLocation() {
             var loc = Q("Player").items[0].p;
 
-            return {
-                x: loc.x,
-                y: loc.y,
-                z: loc.z
-            };
-
+            return JSON.stringify(loc);
         }
+
 
         var gamepad = new Gamepad();
         gamepad.bind(Gamepad.Event.CONNECTED, function(device) {
@@ -275,6 +269,11 @@
         var channel = pusher.subscribe('test_channel');
         var switched = false;
 
+
+        channel.bind('move-player', function(data) {
+            console.log("data we got:", data);
+            setPlayerLocation(data);
+        });
         channel.bind('fuck-shit-up', function(data) {
            console.log(data.message);
            console.log(data.sentiment);
