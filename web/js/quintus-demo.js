@@ -278,23 +278,30 @@ Q.Sprite.extend("Enemy",{
     }
 });
 
-Q.Sprite.extend("Watermelon",{
+Q.Sprite.extend("Watermelon", {
     init: function(p) {
-        this._super(p, {
+        this._super(p,{
             sheet: 'watermelon',
-            value: 1,
             type: Q.SPRITE_COLLECTABLE,
-            collisionMask: Q.SPRITE_PLAYER
+            collisionMask: Q.SPRITE_PLAYER,
+            sensor: true,
+            vx: 0,
+            vy: 0,
+            gravity: 0,
+            value: 1
         });
-
-        this.on("hit.sprite", this, "hit")
+        this.add("animation");
+        this.on("sensor");
     },
 
-    hit:function (col) {
-        if(col.obj.isA("Player")) {
-            this.destroy();
-            col.obj.trigger('watermelon.hit', {"value":this.p.value});
-        }
+    //  When a Collectable is hit.
+    sensor: function(colObj) {
+        console.log('Collision');
+        // Increment the score.
+        colObj.p.score += this.p.value;
+        Q.stageScene('hud', 3, colObj.p);
+        Q.audio.play('happy-melone.mp3');
+        this.destroy();
     }
 });
 
@@ -359,10 +366,10 @@ Q.scene('hud',function(stage) {
   }));
 
   var label = container.insert(new Q.UI.Text({x:200, y: 20,
-    label: "Score: " + stage.options.score, color: "black" }));
+    label: "Score: " + stage.options.score, color: "white" }));
 
   var strength = container.insert(new Q.UI.Text({x:50, y: 20,
-    label: "Health: " + stage.options.health + '%', color: "black" }));
+    label: "Health: " + stage.options.health + '%', color: "white" }));
 
   container.fit(20);
 });
