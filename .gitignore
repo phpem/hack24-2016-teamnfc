@@ -18,3 +18,5 @@
 .idea/*
 /bower_components/
 /node_modules/
+/web/js/nfc.js
+/web/js/pusher.min.js
