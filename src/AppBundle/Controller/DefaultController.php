@@ -19,14 +19,6 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $pusher = $this->get('messenger');
-
-        //$data['switch'] = 'false';
-        //$pusher->trigger('test_channel', 'my_event', $data);
-
-        // replace this example code with whatever you need
-        return $this->render('default/index.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..'),
-        ]);
+        return $this->redirect('play');
     }
 }
