@@ -101,7 +101,7 @@
         // Now set up your game (most games will load a separate .js file)
         var Q = Quintus()                          // Create a new engine instance
                 .include("Sprites, Scenes, Input, 2D, Touch, UI") // Load any needed modules
-                .setup()                           // Add a canvas element onto the page
+                .setup({ maximize: true })                           // Add a canvas element onto the page
                 .controls(true);
 
 
@@ -177,7 +177,7 @@
             // Add in a tile layer, and make it the collision layer
             stage.collisionLayer(new Q.TileLayer({
                 dataAsset: 'level.json',
-                sheet:     'tiles' }));
+                sheet:     'watermelone-tiles' }));
 
             // Create the player and add him to the stage
             var player = stage.insert(new Q.Player());
@@ -187,8 +187,8 @@
             stage.add("viewport").follow(player);
 
             // Add in a couple of enemies
-            stage.insert(new Q.Enemy({ x: 700, y: 0 }));
-            stage.insert(new Q.Enemy({ x: 800, y: 0 }));
+            stage.insert(new Q.Enemy({ sx: 0, sy: 0, x: 700, y: 0 }));
+            stage.insert(new Q.Enemy({ sx: 0, sy: 0, x: 800, y: 0 }));
 
             // Finally add in the tower goal
             stage.insert(new Q.Tower({ x: 180, y: 50 }));
@@ -218,11 +218,12 @@
         });
         // Q.load can be called at any time to load additional assets
         // assets that are already loaded will be skipped
-        Q.load("sprites.png, sprites.json, level.json, tiles.png",
+        Q.load("sprites.png, sprites.json, level.json, tiles.png, watermelone-tiles.png",
             // The callback will be triggered when everything is loaded
             function() {
                 // Sprites sheets can be created manually
                 Q.sheet("tiles","tiles.png", { tilew: 32, tileh: 32 });
+                Q.sheet("watermelone-tiles","watermelone-tiles.png", { tilew: 32, tileh: 32 });
 
                 // Or from a .json asset that defines sprite locations
                 Q.compileSheets("sprites.png","sprites.json");
