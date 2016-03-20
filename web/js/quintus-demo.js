@@ -236,12 +236,14 @@ Q.Sprite.extend("Enemy",{
     init: function(p) {
         this._super(p, {
             sheet: 'enemy',
+            sprite: 'enemy',
             vx: 100,
             damage: 25,
             type: Q.SPRITE_ENEMY,
+            scale: 0.5,
             collisionMask: Q.SPRITE_DEFAULT
         });
-        this.add('2d, aiBounce');
+        this.add('2d, aiBounce, animation, tween');
 
         this.on("bump.top",this, "die");
         this.on("hit.sprite",this,"hit");
@@ -264,6 +266,13 @@ Q.Sprite.extend("Enemy",{
     },
 
     step: function (dt) {
+
+         if(this.p.vx > 0) {
+            this.play("walk_right");
+        } else if(this.p.vx < 0) {
+             this.play("walk_left");
+         }
+
         if(this.p.dead) {
             this.del('2d, aiBounce');
             this.p.deadTimer++;
@@ -349,9 +358,9 @@ Q.Sprite.extend("FakePug", {
 
         // Uncomment to make all fake pugs wilhelm scream as they fall of the map
         if(this.p.y > Q.height ) {
-           // Q.audio.play('scream.mp3');
-           // this.destroy();
-           // return;
+           Q.audio.play('scream.mp3');
+           this.destroy();
+           return;
         }
 
         this.p.jumpTimer++;
@@ -443,7 +452,7 @@ Q.scene('endGame',function(stage) {
     box.fit(20);
 });
 
-Q.load("player.png, player.json, sprites.png, sprites.json, level.json, tiles.png, watermelon.png, watermelon.json, watermelone-tiles.png, happy-melone.mp3, mob-death.mp3, run.mp3, success.mp3, whimper-short.mp3, whimper-long.mp3, scream.mp3, background-wall.jpg", function() {
+Q.load("player.png, player.json, sprites.png, sprites.json, level.json, tiles.png, watermelon.png, watermelon.json, watermelone-tiles.png, happy-melone.mp3, mob-death.mp3, run.mp3, success.mp3, whimper-short.mp3, whimper-long.mp3, scream.mp3, background-wall.jpg, trex.png, trex.json", function() {
     Q.sheet("tiles","tiles.png", { tilew: 32, tileh: 32 });
     Q.sheet("watermelone-tiles","watermelone-tiles.png", { tilew: 32, tileh: 32 });
     Q.compileSheets("sprites.png","sprites.json");
@@ -453,6 +462,11 @@ Q.load("player.png, player.json, sprites.png, sprites.json, level.json, tiles.pn
         walk_left: { frames:  [0,1,2], flip:"x", rate:1/3, loop: true },
         stand_right: { frames:[3,4,5], flip: false, rate:1/3, loop:true },
         stand_left: { frames: [3,4,5], flip:"x", rate:1/3, loop:true }
+    });
+    Q.compileSheets("trex.png", "trex.json");
+    Q.animations("enemy", {
+        walk_right: { frames: [0,1,2], flip: false, rate:1/3, loop: true },
+        walk_left: { frames:  [0,1,2], flip:"x", rate:1/3, loop: true }
     });
     Q.compileSheets("watermelon.png", "watermelon.json");
     Q.stageScene("level1");

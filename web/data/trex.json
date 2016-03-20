@@ -1,0 +1,10 @@
+{
+  "enemy": {
+    "sx": 0,
+    "sy": 0,
+    "cols": 3,
+    "tilew": 60,
+    "tileh": 50,
+    "frames": 3
+  }
+}
