@@ -111,7 +111,9 @@ Q.Sprite.extend("Player",{
             x: 20,
             y: 460,
             score: 0,
-            health: 100
+            health: 100,
+            type: Q.SPRITE_PLAYER,
+            collisionMask: Q.SPRITE_DEFAULT | Q.SPRITE_COLLECTABLE | Q.SPRITE_ENEMY
         });
         this.add('2d, platformerControls, animation, tween');
 
@@ -212,7 +214,9 @@ Q.Sprite.extend("Enemy",{
         this._super(p, {
             sheet: 'enemy',
             vx: 100,
-            damage: 25
+            damage: 25,
+            type: Q.SPRITE_ENEMY,
+            collisionMask: Q.SPRITE_DEFAULT
         });
         this.add('2d, aiBounce');
 
@@ -248,21 +252,30 @@ Q.Sprite.extend("Enemy",{
     }
 });
 
-Q.Sprite.extend("Watermelon",{
+Q.Sprite.extend("Watermelon", {
     init: function(p) {
-        this._super(p, {
+        this._super(p,{
             sheet: 'watermelon',
+            type: Q.SPRITE_COLLECTABLE,
+            collisionMask: Q.SPRITE_PLAYER,
+            sensor: true,
+            vx: 0,
+            vy: 0,
+            gravity: 0,
             value: 1
         });
-
-        this.on("hit.sprite", this, "hit")
+        this.add("animation");
+        this.on("sensor");
     },
 
-    hit:function (col) {
-        if(col.obj.isA("Player")) {
-            this.destroy();
-            col.obj.trigger('watermelon.hit', {"value":this.p.value});
-        }
+    //  When a Collectable is hit.
+    sensor: function(colObj) {
+        console.log('Collision');
+        // Increment the score.
+        colObj.p.score += this.p.value;
+        Q.stageScene('hud', 3, colObj.p);
+        Q.audio.play('happy-melone.mp3');
+        this.destroy();
     }
 });
 
@@ -271,7 +284,9 @@ Q.Sprite.extend("Evilmelon",{
         this._super(p, {
             sheet: 'evilmelon',
             vx: 100,
-            value: 1
+            value: 1,
+            type: Q.SPRITE_ENEMY,
+            collisionMask: Q.SPRITE_DEFAULT
         });
         this.add('2d, aiBounce');
 
@@ -287,6 +302,7 @@ Q.Sprite.extend("Evilmelon",{
 });
 
 Q.scene("level1",function(stage) {
+    stage.insert(new Q.Repeater({ asset: "background-wall.jpg", speedX: 0.1, speedY: 0.1 }));
     stage.collisionLayer(new Q.TileLayer({ dataAsset: 'level.json', sheet: 'watermelone-tiles' }));
     var player = stage.insert(new Q.Player());
 
@@ -300,7 +316,6 @@ Q.scene("level1",function(stage) {
     stage.insert(new Q.Watermelon({ x: 400, y: 0 }));
 
     stage.insert(new Q.Tower({ x: 180, y: 50 }));
-    Q.audio.play('run.mp3', {loop:true});
 
     channel.bind('fuck-shit-up', function(data) {
         console.log(data.sentiment);
@@ -315,6 +330,8 @@ Q.scene("level1",function(stage) {
                 break;
         }
     });
+
+
 });
 
 Q.scene('hud',function(stage) {
@@ -323,10 +340,10 @@ Q.scene('hud',function(stage) {
   }));
 
   var label = container.insert(new Q.UI.Text({x:200, y: 20,
-    label: "Score: " + stage.options.score, color: "black" }));
+    label: "Score: " + stage.options.score, color: "white" }));
 
   var strength = container.insert(new Q.UI.Text({x:50, y: 20,
-    label: "Health: " + stage.options.health + '%', color: "black" }));
+    label: "Health: " + stage.options.health + '%', color: "white" }));
 
   container.fit(20);
 });
@@ -347,7 +364,7 @@ Q.scene('endGame',function(stage) {
     box.fit(20);
 });
 
-Q.load("player.png, player.json, sprites.png, sprites.json, level.json, tiles.png, watermelon.png, watermelon.json, watermelone-tiles.png, happy-melone.mp3, mob-death.mp3, run.mp3, success.mp3, whimper-short.mp3, whimper-long.mp3", function() {
+Q.load("player.png, player.json, sprites.png, sprites.json, level.json, tiles.png, watermelon.png, watermelon.json, watermelone-tiles.png, happy-melone.mp3, mob-death.mp3, run.mp3, success.mp3, whimper-short.mp3, whimper-long.mp3, background-wall.jpg", function() {
     Q.sheet("tiles","tiles.png", { tilew: 32, tileh: 32 });
     Q.sheet("watermelone-tiles","watermelone-tiles.png", { tilew: 32, tileh: 32 });
     Q.compileSheets("sprites.png","sprites.json");
