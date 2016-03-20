@@ -50,7 +50,7 @@ class CallbackController extends Controller
     }
 
     /**
-     * @Route("/callback/fuck-shit-up", name="callback_esendex")
+     * @Route("/callback/fuck-shit-up", name="callback_fuckshitup")
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
