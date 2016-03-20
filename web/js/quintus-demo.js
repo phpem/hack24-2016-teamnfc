@@ -38,6 +38,11 @@ gamepad.bind(Gamepad.Event.UNSUPPORTED, function(device) {
 });
 
 gamepad.bind(Gamepad.Event.BUTTON_DOWN, function(e) {
+    if (e.control == "START_FORWARD") {
+        Q.clearStages();
+        Q.stageScene('level1');
+    }
+
     if (e.control == "LEFT_TOP_SHOULDER") {
         doAPugBomb();
     }
@@ -392,8 +397,6 @@ Q.scene("level1",function(stage) {
     channel.bind('pug-bomb', function (data) {
         doAPugBomb();
     })
-
-
 });
 
 Q.scene('hud',function(stage) {
