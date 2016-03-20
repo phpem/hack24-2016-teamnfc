@@ -347,6 +347,13 @@ Q.Sprite.extend("FakePug", {
             this.play("stand_" + this.p.direction);
         }
 
+        // Uncomment to make all fake pugs wilhelm scream as they fall of the map
+        if(this.p.y > Q.height ) {
+           // Q.audio.play('scream.mp3');
+           // this.destroy();
+           // return;
+        }
+
         this.p.jumpTimer++;
         if (this.p.jumpTimer > 96) {
             var action = randomIntFromInterval(1, 100);
