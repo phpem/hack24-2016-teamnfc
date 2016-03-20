@@ -50,6 +50,30 @@ class CallbackController extends Controller
     }
 
     /**
+     * @Route("/callback/fuck-shit-up", name="callback_esendex")
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function fuckShitUp(Request $request)
+    {
+        $options = array(
+            'cluster' => 'eu',
+            'encrypted' => true
+        );
+        $pusher = new Pusher(
+            $this->getParameter('pusher_app_key'),
+            $this->getParameter('pusher_app_secret'),
+            $this->getParameter('pusher_app_id'),
+            $options
+        );
+
+        $pusher->trigger('test_channel', 'fuck-shit-up', ['sentiment' => 'neg', 'message'  =>  'SHIT GOT FUCKED UP FOR REAL YO']);
+
+        return $this->render(':callback:esendex.html.twig');
+    }
+
+    /**
      * @param $id
      */
     private function checkAccess($id)
