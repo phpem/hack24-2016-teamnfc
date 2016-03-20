@@ -19,6 +19,6 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        return $this->redirect('play');
+        return $this->render(':default:index.html.twig');
     }
 }
