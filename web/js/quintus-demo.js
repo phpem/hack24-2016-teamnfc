@@ -165,6 +165,11 @@ Q.Sprite.extend("Player",{
             Q.audio.stop('run.mp3');
             this.play("stand_" + this.p.direction);
         }
+
+        if(this.p.y > 500 ) {
+            Q.audio.play('whimper-long.mp3');
+            this.resetLevel();
+        }
     },
 
     resetLevel: function() {
