@@ -4,10 +4,9 @@ namespace AppBundle\Controller;
 
 use PHPInsight\Sentiment;
 use Pusher;
-use SimpleXMLElement;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -26,7 +25,7 @@ class CallbackController extends Controller
 
         $pusher->trigger('test_channel', 'pug-bomb', ['message' => 'ALL THE PUGS']);
 
-        return $this->render(':callback:esendex.html.twig');
+        return new Response('Incoming pug bomb');
     }
 
     /**
