@@ -46,7 +46,7 @@ class EvilController extends Controller
     {
         $pusher = $this->getPusher();
 
-        $pusher->trigger('test_channel', 'random-position', ['random' => true]);
+        $pusher->trigger('test_channel', 'handle-position', ['random' => true]);
 
         return new Response('');
     }
