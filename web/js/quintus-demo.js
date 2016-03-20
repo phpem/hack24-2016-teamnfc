@@ -16,12 +16,12 @@ gamepad.bind(Gamepad.Event.UNSUPPORTED, function(device) {
 });
 
 gamepad.bind(Gamepad.Event.BUTTON_DOWN, function(e) {
-    console.log('button down');
+    //console.log('button down');
     // e.control of gamepad e.gamepad pressed down
 });
 
 gamepad.bind(Gamepad.Event.BUTTON_UP, function(e) {
-    console.log('button up');
+    //console.log('button up');
 });
 
 gamepad.bind(Gamepad.Event.AXIS_CHANGED, function(e) {
@@ -88,7 +88,14 @@ var Q = Quintus()
 
 Q.Sprite.extend("Player",{
     init: function(p) {
-        this._super(p, { sheet: "player", sprite: "player", x: 410, y: 90 });
+        this._super(p, {
+            sheet: "player",
+            sprite: "player",
+            x: 410,
+            y: 90,
+            score: 0,
+            health: 100
+        });
         this.add('2d, platformerControls, animation, tween');
 
         this.on("hit.sprite",function(collision) {
@@ -97,12 +104,31 @@ Q.Sprite.extend("Player",{
                 this.destroy();
             } else if(collision.obj.isA("Watermelon")) {
                 collision.obj.destroy();
-                console.log("POINT FOR YOU");
+                this.score ++;
             }
         });
+
+        this.on("enemy.hit","enemyHit");
+        this.on("watermelon.hit", "watermelonHit");
+        this.on("evilmelon.hit", "evilmelonHit");
     },
 
     step: function(dt) {
+
+        if (this.p.immune) {
+            // Swing the sprite opacity between 50 and 100% percent when immune.
+            if ((this.p.immuneTimer % 12) == 0) {
+                var opacity = (this.p.immuneOpacity == 1 ? 0 : 1);
+                this.animate({"opacity":opacity}, 0);
+                this.p.immuneOpacity = opacity;
+            }
+            this.p.immuneTimer++;
+            if (this.p.immuneTimer > 144) {
+                // 3 seconds expired, remove immunity.
+                this.p.immune = false;
+                this.animate({"opacity": 1}, 1);
+            }
+        }
         if(this.p.vx > 0) {
             this.play("walk_right");
         } else if(this.p.vx < 0) {
@@ -110,7 +136,50 @@ Q.Sprite.extend("Player",{
         } else {
             this.play("stand_" + this.p.direction);
         }
+    },
+
+    resetLevel: function() {
+    Q.stageScene("level1");
+        this.p.health = 100;
+        this.animate({opacity: 1});
+        Q.stageScene('hud', 3, this.p);
+    },
+
+    enemyHit: function(data) {
+        var col = data.col;
+        var damage = data.damage;
+        this.p.vy = -150;
+        if (col.normalX == 1) {
+          // Hit from left.
+            this.p.x -=15;
+            this.p.y -=15;
+        }
+        else {
+          // Hit from right;
+            this.p.x +=15;
+            this.p.y -=15;
+        }
+        this.p.immune = true;
+        this.p.immuneTimer = 0;
+        this.p.immuneOpacity = 1;
+        this.p.health -= damage;
+        Q.stageScene('hud', 3, this.p);
+        if (this.p.health <= 0) {
+            this.resetLevel();
+        }
+    },
+    
+    watermelonHit: function (data) {
+        this.p.score += data.value;
+        Q.stageScene('hud', 3, this.p);
+
+    },
+    
+    evilmelonHit: function () {
+        console.log("Hit evil");
     }
+    
+    
 });
 
 Q.Sprite.extend("Tower", {
@@ -121,42 +190,79 @@ Q.Sprite.extend("Tower", {
 
 Q.Sprite.extend("Enemy",{
     init: function(p) {
-        this._super(p, { sheet: 'enemy', vx: 100 });
+        this._super(p, {
+            sheet: 'enemy',
+            vx: 100,
+            damage: 25
+        });
         this.add('2d, aiBounce');
 
-        this.on("bump.left,bump.right,bump.bottom",function(collision) {
-            if(collision.obj.isA("Player")) {
-                Q.stageScene("endGame",1, { label: "You Died" });
-                collision.obj.destroy();
-            }
-        });
+        this.on("bump.top",this, "die");
+        this.on("hit.sprite",this,"hit");
+    },
 
-        this.on("bump.top",function(collision) {
-            if(collision.obj.isA("Player")) {
+    hit: function(col) {
+        if(col.obj.isA("Player") && !col.obj.p.immune && !this.p.dead) {
+            col.obj.trigger('enemy.hit', {"damage":this.p.damage,"col":col});
+        }
+    },
+    
+    die: function (col) {
+        if(col.obj.isA("Player")) {
+            this.p.vx=this.p.vy=0;
+            this.p.dead = true;
+            col.obj.p.vy = -300;
+            this.p.deadTimer = 0;
+        }
+    },
+
+    step: function (dt) {
+        if(this.p.dead) {
+            this.del('2d, aiBounce');
+            this.p.deadTimer++;
+            if (this.p.deadTimer > 24) {
+            // Dead for 24 frames, remove it.
                 this.destroy();
-                collision.obj.p.vy = -300;
             }
-        });
+        }
     }
 });
 
 Q.Sprite.extend("Watermelon",{
     init: function(p) {
-        this._super(p, { sheet: 'watermelon' });
+        this._super(p, {
+            sheet: 'watermelon',
+            value: 1
+        });
+
+        this.on("hit.sprite", this, "hit")
+    },
+
+    hit:function (col) {
+        if(col.obj.isA("Player")) {
+            col.obj.trigger('watermelon.hit', {"value":this.p.value,"col":col});
+            this.destroy();
+        }
     }
 });
 
 Q.Sprite.extend("Evilmelon",{
     init: function(p) {
-        this._super(p, { sheet: 'evilmelon', vx: 100 });
+        this._super(p, {
+            sheet: 'evilmelon',
+            vx: 100,
+            value: -1
+        });
         this.add('2d, aiBounce');
 
-        this.on("bump.left,bump.right,bump.bottom,bump.top",function(collision) {
-            if(collision.obj.isA("Player")) {
-                console.log("LOSE POINTS!!");
-                this.destroy();
-            }
-        });
+        this.on("hit.sprite", this, "hit")
+    },
+
+    hit: function (col) {
+        if(col.obj.isA("Player")) {
+            col.obj.trigger('evilmelon.hit', {"value":this.p.value});
+            this.destroy();
+        }
     }
 });
 
@@ -174,6 +280,20 @@ Q.scene("level1",function(stage) {
     stage.insert(new Q.Watermelon({ x: 400, y: 0 }));
 
     stage.insert(new Q.Tower({ x: 180, y: 50 }));
+});
+
+Q.scene('hud',function(stage) {
+  var container = stage.insert(new Q.UI.Container({
+    x: 50, y: 0
+  }));
+
+  var label = container.insert(new Q.UI.Text({x:200, y: 20,
+    label: "Score: " + stage.options.score, color: "black" }));
+
+  var strength = container.insert(new Q.UI.Text({x:50, y: 20,
+    label: "Health: " + stage.options.health + '%', color: "black" }));
+
+  container.fit(20);
 });
 
 Q.scene('endGame',function(stage) {
@@ -204,6 +324,7 @@ Q.load("player.png, player.json, sprites.png, sprites.json, level.json, tiles.pn
     });
     Q.compileSheets("watermelon.png", "watermelon.json");
     Q.stageScene("level1");
+    Q.stageScene('hud', 3, Q('Player').first().p);
 });
 
 
