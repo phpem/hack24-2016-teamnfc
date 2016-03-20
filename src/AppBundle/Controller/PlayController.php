@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 class PlayController extends Controller
 {
     /**
-     * @Route("/play")
+     * @Route("/play", name="play")
      */
     public function indexAction()
     {
