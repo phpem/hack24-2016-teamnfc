@@ -353,7 +353,10 @@ Q.Sprite.extend("FakePug", {
             if (action % 2 == 0) {
                 // 3 seconds expired, remove immunity.
                 this.p.jumpTimer = 0;
-                this.p.y -= 52;
+                //this.p.y -= 52;
+                this.p.vy = -20;
+                this.p.vy += dt * 9.8;
+                this.p.y += this.p.vy * dt;
             } else {
                 this.p.direction = 'left';
             }
