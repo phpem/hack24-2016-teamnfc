@@ -98,8 +98,8 @@ Q.Sprite.extend("Player",{
         this._super(p, {
             sheet: "player",
             sprite: "player",
-            x: 410,
-            y: 90,
+            x: 20,
+            y: 460,
             score: 0,
             health: 100
         });
@@ -274,7 +274,7 @@ Q.Sprite.extend("Evilmelon",{
 });
 
 Q.scene("level1",function(stage) {
-    stage.collisionLayer(new Q.TileLayer({ dataAsset: 'level.json', sheet: 'tiles' }));
+    stage.collisionLayer(new Q.TileLayer({ dataAsset: 'level.json', sheet: 'watermelone-tiles' }));
     var player = stage.insert(new Q.Player());
 
     stage.add("viewport").follow(player);
@@ -295,7 +295,7 @@ Q.scene("level1",function(stage) {
                 stage.insert(new Q.Watermelon({ x: randomIntFromInterval(100, 900), y: randomIntFromInterval(100, 900) }));
                 break;
             case "neg":
-                stage.insert(new Q.Enemy({x: 900, y: 0}));
+                stage.insert(new Q.Enemy({x: randomIntFromInterval(100, 900), y: 0}));
                 break;
             case "neu":
                 break;
@@ -333,8 +333,9 @@ Q.scene('endGame',function(stage) {
     box.fit(20);
 });
 
-Q.load("player.png, player.json, sprites.png, sprites.json, level.json, tiles.png, watermelon.png, watermelon.json", function() {
+Q.load("player.png, player.json, sprites.png, sprites.json, level.json, tiles.png, watermelon.png, watermelon.json, watermelone-tiles.png", function() {
     Q.sheet("tiles","tiles.png", { tilew: 32, tileh: 32 });
+    Q.sheet("watermelone-tiles","watermelone-tiles.png", { tilew: 32, tileh: 32 });
     Q.compileSheets("sprites.png","sprites.json");
     Q.compileSheets("player.png", "player.json");
     Q.animations("player", {
