@@ -280,6 +280,20 @@ Q.scene("level1",function(stage) {
     stage.insert(new Q.Watermelon({ x: 400, y: 0 }));
 
     stage.insert(new Q.Tower({ x: 180, y: 50 }));
+
+    channel.bind('fuck-shit-up', function(data) {
+        console.log(data.sentiment);
+        switch (data.sentiment) {
+            case "pos":
+                stage.insert(new Q.Watermelon({ x: randomIntFromInterval(100, 900), y: randomIntFromInterval(100, 900) }));
+                break;
+            case "neg":
+                stage.insert(new Q.Enemy({x: 900, y: 0}));
+                break;
+            case "neu":
+                break;
+        }
+    });
 });
 
 Q.scene('hud',function(stage) {
@@ -349,7 +363,9 @@ var channel = pusher.subscribe('test_channel');
 var switched = false;
 
 channel.bind('fuck-shit-up', function(data) {
-    console.log(data.message);
+    // console.log(data.message);
+    // console.log(data.sentiment);
+    // console.log(Q.stage);
 });
 
 channel.bind('my_event', function(data) {
@@ -375,3 +391,8 @@ channel.bind('my_event', function(data) {
         }
     }
 });
+
+function randomIntFromInterval(min,max)
+{
+    return Math.floor(Math.random()*(max-min+1)+min);
+}
