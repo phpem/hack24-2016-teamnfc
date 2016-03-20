@@ -122,18 +122,20 @@ if (!gamepad.init()) {
 }
 
 
-var Q = Quintus()
+var Q = Quintus({ audioSupported: [ 'mp3' ] })
     .include("Sprites, Scenes, Input, 2D, Anim, Touch, UI, TMX, Audio")
     .setup({ maximize: true })
-    .controls().touch()
+    .controls()
+    .touch()
+    .enableSound();
 
 Q.Sprite.extend("Player",{
     init: function(p) {
         this._super(p, {
             sheet: "player",
             sprite: "player",
-            x: 410,
-            y: 90,
+            x: 20,
+            y: 460,
             score: 0,
             health: 100
         });
@@ -141,11 +143,9 @@ Q.Sprite.extend("Player",{
 
         this.on("hit.sprite",function(collision) {
             if(collision.obj.isA("Tower")) {
+                Q.audio.play('success.mp3');
                 Q.stageScene("endGame",1, { label: "You Won!" });
                 this.destroy();
-            } else if(collision.obj.isA("Watermelon")) {
-                collision.obj.destroy();
-                this.score ++;
             }
         });
 
@@ -155,7 +155,6 @@ Q.Sprite.extend("Player",{
     },
 
     step: function(dt) {
-
         if (this.p.immune) {
             // Swing the sprite opacity between 50 and 100% percent when immune.
             if ((this.p.immuneTimer % 12) == 0) {
@@ -175,15 +174,17 @@ Q.Sprite.extend("Player",{
         } else if(this.p.vx < 0) {
             this.play("walk_left");
         } else {
+            Q.audio.stop('run.mp3');
             this.play("stand_" + this.p.direction);
         }
     },
 
     resetLevel: function() {
-    Q.stageScene("level1");
-        this.p.health = 100;
-        this.animate({opacity: 1});
-        Q.stageScene('hud', 3, this.p);
+        Q.stageScene("level1");
+            this.p.health = 100;
+            this.p.score = 0;
+            this.animate({opacity: 1});
+            Q.stageScene('hud', 3, this.p);
     },
 
     enemyHit: function(data) {
@@ -204,6 +205,7 @@ Q.Sprite.extend("Player",{
         this.p.immuneTimer = 0;
         this.p.immuneOpacity = 1;
         this.p.health -= damage;
+        Q.audio.play('whimper-long.mp3');
         Q.stageScene('hud', 3, this.p);
         if (this.p.health <= 0) {
             this.resetLevel();
@@ -212,12 +214,14 @@ Q.Sprite.extend("Player",{
 
     watermelonHit: function (data) {
         this.p.score += data.value;
+        Q.audio.play('happy-melone.mp3');
         Q.stageScene('hud', 3, this.p);
-
     },
 
-    evilmelonHit: function () {
-        console.log("Hit evil");
+    evilmelonHit: function (data) {
+        this.p.score -= data.value;
+        Q.audio.play('whimper-short.mp3');
+        Q.stageScene('hud', 3,  this.p);
     }
 
 
@@ -250,6 +254,7 @@ Q.Sprite.extend("Enemy",{
 
     die: function (col) {
         if(col.obj.isA("Player")) {
+            Q.audio.play('happy-melone.mp3');
             this.p.vx=this.p.vy=0;
             this.p.dead = true;
             col.obj.p.vy = -300;
@@ -281,8 +286,8 @@ Q.Sprite.extend("Watermelon",{
 
     hit:function (col) {
         if(col.obj.isA("Player")) {
-            col.obj.trigger('watermelon.hit', {"value":this.p.value,"col":col});
             this.destroy();
+            col.obj.trigger('watermelon.hit', {"value":this.p.value});
         }
     }
 });
@@ -292,7 +297,7 @@ Q.Sprite.extend("Evilmelon",{
         this._super(p, {
             sheet: 'evilmelon',
             vx: 100,
-            value: -1
+            value: 1
         });
         this.add('2d, aiBounce');
 
@@ -301,8 +306,8 @@ Q.Sprite.extend("Evilmelon",{
 
     hit: function (col) {
         if(col.obj.isA("Player")) {
-            col.obj.trigger('evilmelon.hit', {"value":this.p.value});
             this.destroy();
+            col.obj.trigger('evilmelon.hit', {"value":this.p.value});
         }
     }
 });
@@ -317,10 +322,11 @@ Q.scene("level1",function(stage) {
     stage.insert(new Q.Enemy({ x: 800, y: 0 }));
     stage.insert(new Q.Evilmelon({ x: 900, y: 0 }));
     stage.insert(new Q.Evilmelon({ x: 300, y: 0 }));
-    stage.insert(new Q.Watermelon({ x: 500, y: 0 }));
+    stage.insert(new Q.Watermelon({ x: 100, y: 460 }));
     stage.insert(new Q.Watermelon({ x: 400, y: 0 }));
 
     stage.insert(new Q.Tower({ x: 180, y: 50 }));
+    Q.audio.play('run.mp3', {loop:true});
 
     channel.bind('fuck-shit-up', function(data) {
         console.log(data.sentiment);
@@ -329,7 +335,7 @@ Q.scene("level1",function(stage) {
                 stage.insert(new Q.Watermelon({ x: randomIntFromInterval(100, 900), y: randomIntFromInterval(100, 900) }));
                 break;
             case "neg":
-                stage.insert(new Q.Enemy({x: 900, y: 0}));
+                stage.insert(new Q.Enemy({x: randomIntFromInterval(100, 900), y: 0}));
                 break;
             case "neu":
                 break;
@@ -367,7 +373,7 @@ Q.scene('endGame',function(stage) {
     box.fit(20);
 });
 
-Q.load("player.png, player.json, sprites.png, sprites.json, level.json, watermelone-tiles.png, tiles.png, watermelon.png, watermelon.json", function() {
+Q.load("player.png, player.json, sprites.png, sprites.json, level.json, tiles.png, watermelon.png, watermelon.json, watermelone-tiles.png, happy-melone.mp3, mob-death.mp3, run.mp3, success.mp3, whimper-short.mp3, whimper-long.mp3", function() {
     Q.sheet("tiles","tiles.png", { tilew: 32, tileh: 32 });
     Q.sheet("watermelone-tiles","watermelone-tiles.png", { tilew: 32, tileh: 32 });
     Q.compileSheets("sprites.png","sprites.json");
