@@ -14,7 +14,7 @@ function getPlayerLocation() {
 
 function doAPugBomb() {
     stage = Q.stage(0);
-    for(i=300;i<1700;i++)
+    for(i=300;i<Q.width;i++)
     {
         if(i % 10 == 0) {
             stage.insert(new Q.FakePug({x: i, y: 0}));
@@ -172,7 +172,7 @@ Q.Sprite.extend("Player",{
         }
 
         if(this.p.y > Q.height ) {
-            Q.audio.play('whimper-long.mp3');
+            Q.audio.play('scream.mp3');
             this.resetLevel();
         }
     },
@@ -206,6 +206,8 @@ Q.Sprite.extend("Player",{
         Q.audio.play('whimper-long.mp3');
         Q.stageScene('hud', 3, this.p);
         if (this.p.health <= 0) {
+            Q.audio.stop('whimper-long.mp3');
+            Q.audio.play('scream.mp3');
             this.resetLevel();
         }
     },
@@ -221,7 +223,6 @@ Q.Sprite.extend("Player",{
         Q.audio.play('whimper-short.mp3');
         Q.stageScene('hud', 3,  this.p);
     }
-
 
 });
 
@@ -286,7 +287,6 @@ Q.Sprite.extend("Watermelon", {
             gravity: 0,
             value: 1
         });
-        this.add("animation");
         this.on("sensor");
     },
 
@@ -374,8 +374,13 @@ Q.scene("level1",function(stage) {
 
     stage.insert(new Q.Enemy({ x: 700, y: 0 }));
     stage.insert(new Q.Enemy({ x: 800, y: 0 }));
+    stage.insert(new Q.Enemy({ x: 1000, y: 460 }));
+    stage.insert(new Q.Enemy({ x: 1200, y: 460 }));
+    stage.insert(new Q.Enemy({ x: 1400, y: 0 }));
+    stage.insert(new Q.Enemy({ x: 1600, y: 0 }));
     stage.insert(new Q.Evilmelon({ x: 900, y: 0 }));
     stage.insert(new Q.Evilmelon({ x: 300, y: 0 }));
+    stage.insert(new Q.Evilmelon({ x: 1600, y: 0 }));
     stage.insert(new Q.Watermelon({ x: 100, y: 460 }));
     stage.insert(new Q.Watermelon({ x: 400, y: 0 }));
 
@@ -431,7 +436,7 @@ Q.scene('endGame',function(stage) {
     box.fit(20);
 });
 
-Q.load("player.png, player.json, sprites.png, sprites.json, level.json, tiles.png, watermelon.png, watermelon.json, watermelone-tiles.png, happy-melone.mp3, mob-death.mp3, run.mp3, success.mp3, whimper-short.mp3, whimper-long.mp3, background-wall.jpg", function() {
+Q.load("player.png, player.json, sprites.png, sprites.json, level.json, tiles.png, watermelon.png, watermelon.json, watermelone-tiles.png, happy-melone.mp3, mob-death.mp3, run.mp3, success.mp3, whimper-short.mp3, whimper-long.mp3, scream.mp3, background-wall.jpg", function() {
     Q.sheet("tiles","tiles.png", { tilew: 32, tileh: 32 });
     Q.sheet("watermelone-tiles","watermelone-tiles.png", { tilew: 32, tileh: 32 });
     Q.compileSheets("sprites.png","sprites.json");
