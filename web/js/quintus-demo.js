@@ -9,7 +9,7 @@ function setPlayerLocation(obj) {
 function getPlayerLocation() {
     var loc = Q("Player").items[0].p;
 
-    return JSON.stringify(loc);
+    return loc;
 }
 
 var reversed = false;
@@ -415,8 +415,10 @@ channel.bind('reverse-it', function(data) {
     reversed = !reversed;
     console.log('reversed: ' + reversed);
 });
+
 var position = {};
 var positionCaptured = false;
+
 channel.bind('handle-position', function(data) {
     if( ! positionCaptured) {
         position = getPlayerLocation();
