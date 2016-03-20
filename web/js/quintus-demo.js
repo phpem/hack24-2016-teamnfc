@@ -137,7 +137,9 @@ Q.Sprite.extend("Player",{
             x: 20,
             y: 460,
             score: 0,
-            health: 100
+            health: 100,
+            type: Q.SPRITE_PLAYER,
+            collisionMask: Q.SPRITE_DEFAULT | Q.SPRITE_COLLECTABLE | Q.SPRITE_ENEMY
         });
         this.add('2d, platformerControls, animation, tween');
 
@@ -238,7 +240,9 @@ Q.Sprite.extend("Enemy",{
         this._super(p, {
             sheet: 'enemy',
             vx: 100,
-            damage: 25
+            damage: 25,
+            type: Q.SPRITE_ENEMY,
+            collisionMask: Q.SPRITE_DEFAULT
         });
         this.add('2d, aiBounce');
 
@@ -278,7 +282,9 @@ Q.Sprite.extend("Watermelon",{
     init: function(p) {
         this._super(p, {
             sheet: 'watermelon',
-            value: 1
+            value: 1,
+            type: Q.SPRITE_COLLECTABLE,
+            collisionMask: Q.SPRITE_PLAYER
         });
 
         this.on("hit.sprite", this, "hit")
@@ -297,7 +303,9 @@ Q.Sprite.extend("Evilmelon",{
         this._super(p, {
             sheet: 'evilmelon',
             vx: 100,
-            value: 1
+            value: 1,
+            type: Q.SPRITE_ENEMY,
+            collisionMask: Q.SPRITE_DEFAULT
         });
         this.add('2d, aiBounce');
 
@@ -326,7 +334,6 @@ Q.scene("level1",function(stage) {
     stage.insert(new Q.Watermelon({ x: 400, y: 0 }));
 
     stage.insert(new Q.Tower({ x: 180, y: 50 }));
-    Q.audio.play('run.mp3', {loop:true});
 
     channel.bind('fuck-shit-up', function(data) {
         console.log(data.sentiment);
@@ -341,6 +348,8 @@ Q.scene("level1",function(stage) {
                 break;
         }
     });
+
+
 });
 
 Q.scene('hud',function(stage) {
