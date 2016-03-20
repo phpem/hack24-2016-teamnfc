@@ -327,6 +327,45 @@ Q.Sprite.extend("Evilmelon",{
     }
 });
 
+Q.Sprite.extend("FakePug", {
+    init: function (p) {
+        this._super(p, {
+            sheet: "player",
+            sprite: "player",
+            vx: 100,
+            type: Q.SPRITE_PLAYER,
+            collisionMask: Q.SPRITE_DEFAULT,
+            jumpTimer: 0
+        });
+
+        this.add('2d, aiBounce, animation')
+
+    },
+
+    step: function (dt) {
+         if(this.p.vx > 0) {
+            this.play("walk_right");
+        } else if(this.p.vx < 0) {
+            this.play("walk_left");
+        } else {
+            this.play("stand_" + this.p.direction);
+        }
+
+        this.p.jumpTimer++;
+        if (this.p.jumpTimer > 96) {
+            var action = randomIntFromInterval(1, 100);
+            if (action % 2 == 0) {
+                // 3 seconds expired, remove immunity.
+                this.p.jumpTimer = 0;
+                this.p.y -= 52;
+            } else {
+                this.p.direction = 'left';
+            }
+        }
+
+    }
+});
+
 Q.scene("level1",function(stage) {
     stage.insert(new Q.Repeater({ asset: "background-wall.jpg", speedX: 0.1, speedY: 0.1 }));
     stage.collisionLayer(new Q.TileLayer({ dataAsset: 'level.json', sheet: 'watermelone-tiles' }));
@@ -344,7 +383,6 @@ Q.scene("level1",function(stage) {
     stage.insert(new Q.Tower({ x: 180, y: 50 }));
 
     channel.bind('fuck-shit-up', function(data) {
-        console.log(data.sentiment);
         switch (data.sentiment) {
             case "pos":
                 stage.insert(new Q.Watermelon({ x: randomIntFromInterval(100, 900), y: randomIntFromInterval(100, 900) }));
@@ -356,6 +394,15 @@ Q.scene("level1",function(stage) {
                 break;
         }
     });
+
+    channel.bind('pug-bomb', function (data) {
+        for(i=300;i<1700;i++)
+        {
+            if(i % 10 == 0) {
+                stage.insert(new Q.FakePug({x: i, y: 0}));
+            }
+        }
+    })
 
 
 });
@@ -405,9 +452,6 @@ Q.load("player.png, player.json, sprites.png, sprites.json, level.json, tiles.pn
     Q.stageScene("level1");
     Q.stageScene('hud', 3, Q('Player').first().p);
 });
-
-
-
 
 /*
  pusher stuff
