@@ -9,7 +9,7 @@ function setPlayerLocation(obj) {
 function getPlayerLocation() {
     var loc = Q("Player").items[0].p;
 
-    return JSON.stringify(loc);
+    return loc;
 }
 
 var reversed = false;
@@ -321,6 +321,7 @@ Q.Sprite.extend("Evilmelon",{
 });
 
 Q.scene("level1",function(stage) {
+    stage.insert(new Q.Repeater({ asset: "background-wall.jpg", speedX: 0.1, speedY: 0.1 }));
     stage.collisionLayer(new Q.TileLayer({ dataAsset: 'level.json', sheet: 'watermelone-tiles' }));
     var player = stage.insert(new Q.Player());
 
@@ -382,7 +383,7 @@ Q.scene('endGame',function(stage) {
     box.fit(20);
 });
 
-Q.load("player.png, player.json, sprites.png, sprites.json, level.json, tiles.png, watermelon.png, watermelon.json, watermelone-tiles.png, happy-melone.mp3, mob-death.mp3, run.mp3, success.mp3, whimper-short.mp3, whimper-long.mp3", function() {
+Q.load("player.png, player.json, sprites.png, sprites.json, level.json, tiles.png, watermelon.png, watermelon.json, watermelone-tiles.png, happy-melone.mp3, mob-death.mp3, run.mp3, success.mp3, whimper-short.mp3, whimper-long.mp3, background-wall.jpg", function() {
     Q.sheet("tiles","tiles.png", { tilew: 32, tileh: 32 });
     Q.sheet("watermelone-tiles","watermelone-tiles.png", { tilew: 32, tileh: 32 });
     Q.compileSheets("sprites.png","sprites.json");
@@ -430,8 +431,10 @@ channel.bind('reverse-it', function(data) {
     reversed = !reversed;
     console.log('reversed: ' + reversed);
 });
+
 var position = {};
 var positionCaptured = false;
+
 channel.bind('handle-position', function(data) {
     if( ! positionCaptured) {
         position = getPlayerLocation();
