@@ -7,6 +7,23 @@
     <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
     <script>
 
+        function setPlayerLocation(coords) {
+            Q("Player").items[0].p.x = coords.x;
+            Q("Player").items[0].p.y = coords.y;
+            Q("Player").items[0].p.z = coords.z;
+        }
+
+        function getPlayerLocation() {
+            var loc = Q("Player").items[0].p;
+
+            return {
+                x: loc.x,
+                y: loc.y,
+                z: loc.z
+            };
+
+        }
+
         var gamepad = new Gamepad();
         gamepad.bind(Gamepad.Event.CONNECTED, function(device) {
             // a new gamepad connected
@@ -193,8 +210,8 @@
             stage.add("viewport").follow(player);
 
             // Add in a couple of enemies
-            stage.insert(new Q.Enemy({ sx: 0, sy: 0, x: 700, y: 0 }));
-            stage.insert(new Q.Enemy({ sx: 0, sy: 0, x: 800, y: 0 }));
+            //stage.insert(new Q.Enemy({ sx: 0, sy: 0, x: 700, y: 0 }));
+            //stage.insert(new Q.Enemy({ sx: 0, sy: 0, x: 800, y: 0 }));
 
             // Finally add in the tower goal
             stage.insert(new Q.Tower({ x: 180, y: 50 }));
