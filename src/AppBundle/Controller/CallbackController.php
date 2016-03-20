@@ -28,23 +28,19 @@ class CallbackController extends Controller
 
         $parsedData = $this->parseContent($request->getContent());
 
-        $options = array(
-            'cluster' => 'eu',
-            'encrypted' => true
-        );
-        $pusher = new Pusher(
-            $this->getParameter('pusher_app_key'),
-            $this->getParameter('pusher_app_secret'),
-            $this->getParameter('pusher_app_id'),
-            $options
-        );
+        $pusher = $this->getPusher();
 
-
-        $messageText = $parsedData['MessageText'];
+        $messageText = strtolower($parsedData['MessageText']);
         $sentiment = new Sentiment();
         $class = $sentiment->categorise($messageText);
 
-        $pusher->trigger('test_channel', 'fuck-shit-up', ['sentiment' => $class, 'message'  =>  $messageText]);
+        if($messageText != 'pug bomb') {
+            $pusher->trigger('test_channel', 'fuck-shit-up', ['sentiment' => $class, 'message'  =>  $messageText]);
+        }
+        else
+        {
+            $pusher->trigger('test_channel', 'pug-bomb', ['message'  =>  $messageText]);
+        }
 
         return $this->render(':callback:esendex.html.twig');
     }
@@ -57,16 +53,7 @@ class CallbackController extends Controller
      */
     public function fuckShitUp(Request $request)
     {
-        $options = array(
-            'cluster' => 'eu',
-            'encrypted' => true
-        );
-        $pusher = new Pusher(
-            $this->getParameter('pusher_app_key'),
-            $this->getParameter('pusher_app_secret'),
-            $this->getParameter('pusher_app_id'),
-            $options
-        );
+        $pusher = $this->getPusher();
 
         $pusher->trigger('test_channel', 'fuck-shit-up', ['sentiment' => 'neg', 'message'  =>  'SHIT GOT FUCKED UP FOR REAL YO']);
 
@@ -89,5 +76,24 @@ class CallbackController extends Controller
         $json = json_encode($xml);
 
         return json_decode($json, true);
+    }
+
+    /**
+     * @return Pusher
+     */
+    protected function getPusher()
+    {
+        $options = array(
+            'cluster'   => 'eu',
+            'encrypted' => true
+        );
+        $pusher = new Pusher(
+            $this->getParameter('pusher_app_key'),
+            $this->getParameter('pusher_app_secret'),
+            $this->getParameter('pusher_app_id'),
+            $options
+        );
+
+        return $pusher;
     }
 }

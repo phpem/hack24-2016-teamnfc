@@ -83,32 +83,6 @@ gamepad.bind(Gamepad.Event.AXIS_CHANGED, function(e) {
             Q.inputs['left'] = false;
         }
     }
-    /////////////////////////////
-    // up
-    /*
-    if (e.axis == "LEFT_STICK_Y" && e.value == -1) {
-        Q.inputs['up'] = true;
-    }
-
-    if (e.axis =="LEFT_STICK_Y" && e.value == 0) {
-        Q.inputs['up'] = false;
-    }
-
-
-    /////////////////////////////
-    // down
-    if (e.axis == "LEFT_STICK_Y" && e.value == 1) {
-        Q.inputs['down'] = true;
-    }
-
-    if (e.axis =="LEFT_STICK_Y" && e.value == 0) {
-        Q.inputs['down'] = false;
-    }
-    */
-
-
-
-    // e.axis changed to value e.value for gamepad e.gamepad
 });
 
 gamepad.bind(Gamepad.Event.TICK, function(gamepads) {
@@ -422,15 +396,18 @@ channel.bind('reverse-it', function(data) {
     console.log('reversed: ' + reversed);
 });
 
-var position = {};
+var position;
 var positionCaptured = false;
 
 channel.bind('handle-position', function(data) {
     if( ! positionCaptured) {
         position = getPlayerLocation();
+        console.log('Capturing Player Position');
+        console.log(position);
     }
     else
     {
+        console.log('Restoring Player Position');
         setPlayerLocation(position);
     }
     positionCaptured = !positionCaptured;
