@@ -171,7 +171,7 @@ Q.Sprite.extend("Player",{
             this.play("stand_" + this.p.direction);
         }
 
-        if(this.p.y > 500 ) {
+        if(this.p.y > Q.height ) {
             Q.audio.play('whimper-long.mp3');
             this.resetLevel();
         }
@@ -381,10 +381,12 @@ Q.scene("level1",function(stage) {
     channel.bind('fuck-shit-up', function(data) {
         switch (data.sentiment) {
             case "pos":
-                stage.insert(new Q.Watermelon({ x: randomIntFromInterval(100, 900), y: randomIntFromInterval(100, 900) }));
+                stage.insert(new Q.Watermelon({ x: randomIntFromInterval(0, Q.width), y: randomIntFromInterval(100, Q.height) }));
                 break;
             case "neg":
-                stage.insert(new Q.Enemy({x: randomIntFromInterval(100, 900), y: 0}));
+                var x = randomIntFromInterval(0, Q.width);
+                var y = 0;
+                stage.insert(new Q.Enemy({x: x, y: y}));
                 break;
             case "neu":
                 break;
