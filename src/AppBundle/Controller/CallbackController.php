@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use PHPInsight\Sentiment;
 use Pusher;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -25,7 +26,31 @@ class CallbackController extends Controller
 
         $pusher->trigger('test_channel', 'pug-bomb', ['message' => 'ALL THE PUGS']);
 
-        return new Response('Incoming pug bomb');
+        $horribleText = '{
+  "version": "1.0",
+  "response": {
+    "outputSpeech": {
+      "type": "PlainText",
+      "text": "Welcome to the Alexa Skills Kit, you can say hello"
+    },
+    "card": {
+      "type": "Simple",
+      "title": "HelloWorld",
+      "content": "Welcome to the Alexa Skills Kit, you can say hello"
+    },
+    "reprompt": {
+      "outputSpeech": {
+        "type": "PlainText",
+        "text": "Welcome to the Alexa Skills Kit, you can say hello"
+      }
+    },
+    "shouldEndSession": false
+  },
+  "sessionAttributes": {}
+}';
+        $response = new Response($horribleText, 200);
+        $response->headers->set('Content-Type','application/json;charset=UTF-8');
+        return $response;
     }
 
     /**
