@@ -1,8 +1,7 @@
 ```
 composer install
-```
-
-```
+npm install
+gulp
 php bin/console server:run
 ```
 
